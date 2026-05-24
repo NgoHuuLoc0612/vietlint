@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=68", "wheel", "pybind11>=2.11"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name            = "vietlint"
+version         = "1.0.0"
+description     = "Vietnamese coding convention linter"
+readme          = "README.md"
+license         = {text = "MIT"}
+requires-python = ">=3.11"
+keywords        = ["vietnamese", "linter", "convention", "code-quality"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "pydantic>=2.6.0",
+    "websockets>=12.0",
+]
+
+[project.urls]
+Homepage   = "https://github.com/NgoHuuLoc0612/vietlint"
+Repository = "https://github.com/NgoHuuLoc0612/vietlint"
+Issues     = "https://github.com/NgoHuuLoc0612/vietlint/issues"
+
+[project.optional-dependencies]
+ml = [
+    "scikit-learn>=1.4.0",
+    "numpy>=1.26.0",
+    "onnxruntime>=1.17.0",
+    "skl2onnx>=1.16.0",
+]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "httpx>=0.26.0",
+    "black",
+    "ruff",
+    "mypy",
+]
+
+[project.scripts]
+vietlint-backend = "vietlint.backend:main"
+vietlint-corpus  = "vietlint.corpus:main"
+
+[tool.setuptools]
+packages = ["vietlint"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths    = ["tests/python"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true

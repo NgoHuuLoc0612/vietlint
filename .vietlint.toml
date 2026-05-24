@@ -1,0 +1,39 @@
+# VietLint Configuration
+# https://github.com/NgoHuuLoc0612/vietlint
+
+[project]
+root = "."
+
+[lint]
+fail_on_warning = false
+max_violations = 0
+target_encoding = "utf-8"
+model = "/home/hp_v/vietlint/model.onnx"
+
+[rules.VL001]
+enabled = true
+severity = "warning"
+
+[rules.VL002]
+enabled = true
+severity = "warning"
+
+[rules.VL003]
+enabled = true
+severity = "info"
+
+[rules.VL004]
+enabled = true
+severity = "warning"
+
+[rules.VL005]
+enabled = true
+severity = "error"
+
+[rules.VL006]
+enabled = true
+severity = "info"
+
+[rules.VL007]
+enabled = false
+severity = "info"

@@ -1,0 +1,328 @@
+{
+  "tests": 56,
+  "name": "AllTests",
+  "testsuites": [
+    {
+      "name": "UTF8ScannerTest",
+      "tests": 8,
+      "testsuite": [
+        {
+          "name": "EmptyInput",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 26
+        },
+        {
+          "name": "PureASCII",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 32
+        },
+        {
+          "name": "VietnameseChars",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 42
+        },
+        {
+          "name": "VietnameseLatin1E",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 52
+        },
+        {
+          "name": "MalformedUTF8TolerantScan",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 65
+        },
+        {
+          "name": "ValidateUTF8",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 74
+        },
+        {
+          "name": "ExtractVietnameseTokens",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 86
+        },
+        {
+          "name": "PositionTracker",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 92
+        }
+      ]
+    },
+    {
+      "name": "LexerTest",
+      "tests": 9,
+      "testsuite": [
+        {
+          "name": "EmptySource",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 117
+        },
+        {
+          "name": "PythonIdentifiers",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 124
+        },
+        {
+          "name": "PythonKeywords",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 132
+        },
+        {
+          "name": "PythonVietnameseIdentifier",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 148
+        },
+        {
+          "name": "JavaScriptLineComment",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 161
+        },
+        {
+          "name": "JavaScriptBlockComment",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 174
+        },
+        {
+          "name": "CppRawString",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 184
+        },
+        {
+          "name": "LanguageAutoDetect",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 194
+        },
+        {
+          "name": "ExtractIdentifiers",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 204
+        }
+      ]
+    },
+    {
+      "name": "ClassifierTest",
+      "tests": 8,
+      "testsuite": [
+        {
+          "name": "PureASCIIIdentifier",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 223
+        },
+        {
+          "name": "PureVietnameseIdentifier",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 231
+        },
+        {
+          "name": "TransliteratedIdentifier",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 239
+        },
+        {
+          "name": "TransliteratedSingle",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 245
+        },
+        {
+          "name": "AbbreviationDetection",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 250
+        },
+        {
+          "name": "NamingStyleDetection",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 255
+        },
+        {
+          "name": "AsciiEquivalentSuggestion",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 264
+        },
+        {
+          "name": "BatchClassify",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 274
+        }
+      ]
+    },
+    {
+      "name": "EncodingDetectorTest",
+      "tests": 7,
+      "testsuite": [
+        {
+          "name": "EmptyBuffer",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 296
+        },
+        {
+          "name": "PureASCII",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 302
+        },
+        {
+          "name": "UTF8WithVietnamese",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 311
+        },
+        {
+          "name": "UTF8BOM",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 321
+        },
+        {
+          "name": "TCVN3Conversion",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 330
+        },
+        {
+          "name": "NormalizeUTF8NoConversion",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 339
+        },
+        {
+          "name": "NormalizeStripsUTF8BOM",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 349
+        }
+      ]
+    },
+    {
+      "name": "RuleEngineTest",
+      "tests": 7,
+      "testsuite": [
+        {
+          "name": "LintCleanPython",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 374
+        },
+        {
+          "name": "LintVietnamesePython",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 389
+        },
+        {
+          "name": "LintMixedCommentJS",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 399
+        },
+        {
+          "name": "LintTransliteratedIdentifiers",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 413
+        },
+        {
+          "name": "StatsTracking",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 430
+        },
+        {
+          "name": "RuleRegistration",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 438
+        },
+        {
+          "name": "NFDNormalizationDetection",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 448
+        }
+      ]
+    },
+    {
+      "name": "JsonParserTest",
+      "tests": 11,
+      "testsuite": [
+        {
+          "name": "ParseNull",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 464
+        },
+        {
+          "name": "ParseBool",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 470
+        },
+        {
+          "name": "ParseInt",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 480
+        },
+        {
+          "name": "ParseNegInt",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 486
+        },
+        {
+          "name": "ParseString",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 492
+        },
+        {
+          "name": "ParseStringWithEscapes",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 500
+        },
+        {
+          "name": "ParseObject",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 509
+        },
+        {
+          "name": "ParseArray",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 520
+        },
+        {
+          "name": "ParseNestedObject",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 528
+        },
+        {
+          "name": "SerializeRoundTrip",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 542
+        },
+        {
+          "name": "ParseUnicodeEscape",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 557
+        }
+      ]
+    },
+    {
+      "name": "FeatureExtractorTest",
+      "tests": 6,
+      "testsuite": [
+        {
+          "name": "FeatureVectorDimension",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 577
+        },
+        {
+          "name": "ASCIIIdentifierFeatures",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 582
+        },
+        {
+          "name": "VietnameseIdentifierFeatures",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 590
+        },
+        {
+          "name": "NamingStyleFeatures",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 597
+        },
+        {
+          "name": "BatchExtract",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 613
+        },
+        {
+          "name": "EmptyIdentifier",
+          "file": "\/home\/claude\/vietlint\/tests\/test_all.cpp",
+          "line": 621
+        }
+      ]
+    }
+  ]
+}

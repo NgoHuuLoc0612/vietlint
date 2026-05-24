@@ -1,0 +1,35 @@
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ML/Data
+corpus/
+model.onnx
+*.onnx
+
+# Grammar binaries
+grammars/*.so
+
+# ONNX Runtime
+/tmp/onnxruntime*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+vietlint_history.db

@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build libtree-sitter-dev
+
+      - name: Download ONNX Runtime
+        run: |
+          wget -q https://github.com/microsoft/onnxruntime/releases/download/v1.17.3/onnxruntime-linux-x64-1.17.3.tgz
+          tar -xzf onnxruntime-linux-x64-1.17.3.tgz
+          mkdir -p /tmp/onnxruntime/lib /tmp/onnxruntime/include
+          cp -r onnxruntime-linux-x64-1.17.3/include /tmp/onnxruntime/
+          cp onnxruntime-linux-x64-1.17.3/lib/libonnxruntime.so* /tmp/onnxruntime/lib/
+          sudo cp /tmp/onnxruntime/lib/libonnxruntime.so* /usr/local/lib/
+          sudo ldconfig
+
+      - name: Build
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DVIETLINT_ENABLE_AVX2=OFF \
+            -DVIETLINT_ENABLE_CLANG=OFF \
+            -DVIETLINT_ENABLE_PYTHON=OFF \
+            -DVIETLINT_ENABLE_TREE_SITTER=ON \
+            -DVIETLINT_ENABLE_ONNX=ON \
+            -DVIETLINT_ONNX_DIR=/tmp/onnxruntime
+          cmake --build build -j$(nproc)
+
+      - name: Smoke test
+        run: |
+          echo 'def tinhTong(soA, soB): pass' > /tmp/test.py
+          ./build/vietlint lint /tmp/test.py || true
+          ./build/vietlint version
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: vietlint-linux-x64
+          path: build/vietlint
+
+  release:
+    needs: build-linux
+    runs-on: ubuntu-24.04
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: vietlint-linux-x64
+          path: artifacts/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/vietlint
+          generate_release_notes: true
