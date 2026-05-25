@@ -55,22 +55,122 @@ GITHUB_API = "https://api.github.com"
 GITHUB_RAW = "https://raw.githubusercontent.com"
 
 # FIXED: proper GitHub search query syntax
+# GitHub search queries covering all 14 tree-sitter languages + domain topics
 SEARCH_QUERIES = [
-    # Vietnamese Python repos by topic/keyword
+    # ── Python ──────────────────────────────────────────────────────────────
     'ten_khach OR so_luong OR dia_chi language:python',
     'nguoi_dung OR mat_khau OR dang_nhap language:python',
     'quan_ly OR bao_cao OR danh_sach language:python',
     'nhan_vien OR khach_hang OR san_pham language:python',
-    # Vietnamese JS/TS
-    'ten_khach OR so_luong OR dia_chi language:javascript',
-    'nguoi_dung OR mat_khau language:typescript',
-    # Vietnamese C++
-    'tenKhach OR soLuong OR diaHinh language:cpp',
-    # Topic-based
+    'ket_qua OR tinh_toan OR xu_ly language:python',
+    'hoc_sinh OR giao_vien OR truong_hoc language:python',
+    'benh_vien OR benh_nhan OR bac_si language:python',
+    'tai_khoan OR giao_dich OR ngan_hang language:python',
+    'du_an OR cong_viec OR nhiem_vu language:python',
+    'thi_truong OR co_phieu OR tai_chinh language:python',
+    'don_hang OR gio_hang OR thanh_toan language:python',
+    'lop_hoc OR mon_hoc OR bang_diem language:python',
+    'luong OR cham_cong OR nghi_phep language:python',
+    'van_don OR giao_hang OR kho language:python',
+    'du_lieu OR mo_hinh OR huan_luyen language:python',
+    'nhan_dang OR phan_loai OR du_doan language:python',
+    'tênKhách OR sốLượng OR địaChỉ language:python',
+    'ngườiDùng OR mậtKhẩu language:python',
     'topic:vietnamese language:python',
     'topic:viet language:python',
-    # Pure Vietnamese identifier patterns
-    'tênKhách OR sốLượng OR địaChỉ language:python',
+    'topic:vietnam language:python',
+    # ── JavaScript ──────────────────────────────────────────────────────────
+    'ten_khach OR so_luong OR dia_chi language:javascript',
+    'nguoi_dung OR mat_khau OR dang_nhap language:javascript',
+    'quan_ly OR danh_sach OR san_pham language:javascript',
+    'tenKhach OR soLuong OR diaHinh language:javascript',
+    'donHang OR gioHang OR thanhToan language:javascript',
+    'topic:vietnamese language:javascript',
+    'topic:viet language:javascript',
+    # ── TypeScript ──────────────────────────────────────────────────────────
+    'nguoi_dung OR mat_khau language:typescript',
+    'quan_ly OR bao_cao OR ket_qua language:typescript',
+    'nguoiDung OR matKhau OR dangNhap language:typescript',
+    'tenKhach OR soLuong language:typescript',
+    'topic:vietnamese language:typescript',
+    # ── Java ────────────────────────────────────────────────────────────────
+    'tenKhach OR soLuong OR diaHinh language:java',
+    'nguoiDung OR matKhau OR dangNhap language:java',
+    'quanLy OR baoCao OR danhSach language:java',
+    'nhanVien OR khachHang OR sanPham language:java',
+    'lopHoc OR monHoc OR bangDiem language:java',
+    'benhVien OR benhNhan OR bacSi language:java',
+    'topic:vietnamese language:java',
+    'topic:vietnam language:java',
+    # ── C++ ─────────────────────────────────────────────────────────────────
+    'tenKhach OR soLuong OR diaHinh language:cpp',
+    'nguoiDung OR matKhau language:cpp',
+    'quanLy OR danhSach language:cpp',
+    'nhanVien OR sanPham language:cpp',
+    'nhiet_do OR do_am OR anh_sang language:cpp',
+    'topic:vietnamese language:cpp',
+    # ── C ───────────────────────────────────────────────────────────────────
+    'ten_khach OR so_luong language:c',
+    'nguoi_dung OR mat_khau language:c',
+    'cam_bien OR dieu_khien OR thiet_bi language:c',
+    'topic:vietnamese language:c',
+    # ── C# ──────────────────────────────────────────────────────────────────
+    'tenKhach OR soLuong language:csharp',
+    'nguoiDung OR matKhau language:csharp',
+    'quanLy OR danhSach language:csharp',
+    'nhanVien OR khachHang language:csharp',
+    'topic:vietnamese language:csharp',
+    # ── Go ──────────────────────────────────────────────────────────────────
+    'ten_khach OR so_luong language:go',
+    'nguoi_dung OR mat_khau language:go',
+    'quan_ly OR danh_sach language:go',
+    'don_hang OR tai_khoan language:go',
+    'topic:vietnamese language:go',
+    # ── PHP ─────────────────────────────────────────────────────────────────
+    'ten_khach OR so_luong OR dia_chi language:php',
+    'nguoi_dung OR mat_khau OR dang_nhap language:php',
+    'quan_ly OR danh_sach language:php',
+    'don_hang OR gio_hang OR thanh_toan language:php',
+    'hoc_sinh OR giao_vien language:php',
+    'topic:vietnamese language:php',
+    # ── Rust ────────────────────────────────────────────────────────────────
+    'ten_khach OR so_luong language:rust',
+    'nguoi_dung OR ket_qua language:rust',
+    'quan_ly OR danh_sach language:rust',
+    'topic:vietnamese language:rust',
+    # ── Scala ───────────────────────────────────────────────────────────────
+    'tenKhach OR soLuong language:scala',
+    'nguoiDung OR matKhau language:scala',
+    'quanLy OR danhSach language:scala',
+    'topic:vietnamese language:scala',
+    # ── CSS ─────────────────────────────────────────────────────────────────
+    'topic:vietnamese language:css',
+    'topic:viet language:css',
+    # ── JSON ────────────────────────────────────────────────────────────────
+    'ten_khach OR so_luong language:json',
+    'nguoi_dung OR dia_chi language:json',
+    # ── Julia ───────────────────────────────────────────────────────────────
+    'ten_khach OR so_luong language:julia',
+    'nguoi_dung OR ket_qua language:julia',
+    'topic:vietnamese language:julia',
+    # ── OCaml ───────────────────────────────────────────────────────────────
+    'ten_khach OR so_luong language:ocaml',
+    'topic:vietnamese language:ocaml',
+    # ── Domain: E-commerce ──────────────────────────────────────────────────
+    'san_pham OR danh_muc OR ton_kho language:python',
+    'khuyen_mai OR giam_gia OR ma_giam language:python',
+    # ── Domain: Healthcare ──────────────────────────────────────────────────
+    'don_thuoc OR xet_nghiem OR lich_kham language:java',
+    # ── Domain: Finance ─────────────────────────────────────────────────────
+    'tai_khoan OR giao_dich OR so_du language:python',
+    'vay_von OR lai_suat OR du_no language:java',
+    # ── Domain: HR/Payroll ──────────────────────────────────────────────────
+    'bang_luong OR phu_cap OR thue_tncn language:java',
+    # ── Domain: Logistics ───────────────────────────────────────────────────
+    'lo_hang OR xuat_nhap_khau language:java',
+    # ── Domain: Real Estate ─────────────────────────────────────────────────
+    'bat_dong_san OR can_ho OR cho_thue language:python',
+    'du_an OR mat_bang OR gia_thue language:javascript',
 ]
 
 class GitHubClient:
@@ -114,8 +214,6 @@ class GitHubClient:
         repos = {}
         per_page = 30
         for query in SEARCH_QUERIES:
-            if len(repos) >= max_repos:
-                break
             encoded = urllib.parse.quote(query)
             url = f"{GITHUB_API}/search/repositories?q={encoded}&per_page={per_page}&sort=stars&order=desc"
             data = self._request(url)
@@ -125,6 +223,7 @@ class GitHubClient:
                     if full_name and full_name not in repos:
                         repos[full_name] = item
             logger.info("Collected %d unique repos so far", len(repos))
+        logger.info("Total unique repos found: %d (capped at %d)", len(repos), max_repos)
         return list(repos.values())[:max_repos]
 
     def get_tree(self, owner: str, repo: str) -> list[dict]:
