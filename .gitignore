@@ -10,12 +10,9 @@ __pycache__/
 *.pyd
 
 # ML/Data
-corpus/
+corpus/corpus_raw.jsonl
 model.onnx
 *.onnx
-
-# Grammar binaries
-grammars/*.so
 
 # ONNX Runtime
 /tmp/onnxruntime*
