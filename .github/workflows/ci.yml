@@ -36,8 +36,7 @@ jobs:
             -DVIETLINT_ENABLE_CLANG=OFF \
             -DVIETLINT_ENABLE_PYTHON=OFF \
             -DVIETLINT_ENABLE_TREE_SITTER=ON \
-            -DVIETLINT_ENABLE_ONNX=ON \
-            -DVIETLINT_ONNX_DIR=/tmp/onnxruntime
+            -DVIETLINT_ENABLE_ONNX=OFF
           cmake --build build -j$(nproc)
 
       - name: Smoke test
