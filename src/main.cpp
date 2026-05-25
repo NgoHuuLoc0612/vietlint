@@ -481,7 +481,7 @@ int main(int argc, char* argv[]) {
                   << "ONNX Runtime | "
 #endif
                   << "pybind11\n"
-                  << "https://github.com/vietlint/vietlint\n";
+                  << "https://github.com/NgoHuuLoc0612/vietlint\n";
         return 0;
     }
 

@@ -172,7 +172,7 @@ LintConfig::write_default(const std::filesystem::path& path) noexcept {
     std::ofstream f(path);
     if (!f) return std::unexpected("Cannot write config: " + path.string());
     f << R"(# VietLint Configuration
-# https://github.com/vietlint/vietlint
+# https://github.com/NgoHuuLoc0612/vietlint
 
 [project]
 root = "."
