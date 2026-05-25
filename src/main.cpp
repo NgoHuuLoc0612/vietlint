@@ -49,7 +49,7 @@ struct CliArgs {
 };
 
 static void print_usage(const char* argv0) {
-    std::cout << R"(VietLint )" << "1.0.0" << R"( — Vietnamese coding convention linter
+    std::cout << R"(VietLint )" << "1.0.3" << R"( — Vietnamese coding convention linter
 
 USAGE:
   )" << argv0 << R"( [MODE] [OPTIONS] [FILES...]
@@ -467,7 +467,7 @@ int main(int argc, char* argv[]) {
     auto args = parse_args(argc, argv);
 
     if (args.mode_version) {
-        std::cout << "VietLint 1.0.0\n"
+        std::cout << "VietLint " "1.0.3" "\n"
                   << "C++20 core | "
 #if defined(__AVX2__)
                   << "AVX2 SIMD | "

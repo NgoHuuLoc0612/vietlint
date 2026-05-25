@@ -50,6 +50,9 @@ if(MSVC)
         $<$<BOOL:${VIETLINT_ENABLE_AVX2}>:/arch:AVX2>
     )
     target_compile_definitions(vietlint_compile_opts INTERFACE
+    VIETLINT_VERSION="${PROJECT_VERSION}"
+)
+target_compile_definitions(vietlint_compile_opts INTERFACE
         _CRT_SECURE_NO_WARNINGS
         NOMINMAX
         WIN32_LEAN_AND_MEAN
