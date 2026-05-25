@@ -38,6 +38,7 @@ struct CliArgs {
     std::string              config_path;
     std::string              model_path;
     bool                     fix          = false;
+    std::string              fix_style    = "snake"; // "snake" or "camel"
     bool                     verbose      = false;
     bool                     no_color     = false;
     int                      jobs         = 0;       // 0 = auto
@@ -66,6 +67,7 @@ LINT OPTIONS:
   --config=<path>     Path to .vietlint.toml (default: auto-detect)
   --model=<path>      Path to ONNX classifier model
   --fix               Apply auto-fix suggestions in-place
+  --fix-style=<style> Fix style: snake (default) or camel
   --jobs=<n>          Parallel file processing (default: CPU count)
   --max-violations=N  Stop after N violations (0 = unlimited)
   --no-color          Disable ANSI color output
@@ -116,6 +118,7 @@ static CliArgs parse_args(int argc, char* argv[]) {
             continue;
         }
         if (arg == "--fix")      { args.fix      = true; continue; }
+        if (arg.starts_with("--fix-style=")) { args.fix_style = std::string(arg.substr(12)); continue; }
         if (arg == "--verbose")  { args.verbose  = true; args.lsp_verbose = true; continue; }
         if (arg == "--no-color") { args.no_color = true; continue; }
         if (arg == "--help" || arg == "-h") { print_usage(argv[0]); std::exit(0); }
@@ -183,7 +186,8 @@ static fs::path find_config() noexcept {
 // Apply fix: overwrite file with violations replaced by their first fix
 // ---------------------------------------------------------------------------
 static bool apply_fix(const fs::path& file,
-                       std::span<const Diagnostic> diags) noexcept {
+                       std::span<const Diagnostic> diags,
+                       std::string_view fix_style = "snake") noexcept {
     std::ifstream inf(file, std::ios::binary);
     if (!inf) return false;
     std::string source((std::istreambuf_iterator<char>(inf)),
@@ -211,7 +215,10 @@ static bool apply_fix(const fs::path& file,
         // Skip if we already applied a fix at this span
         if (applied_spans.count(start)) continue;
         applied_spans.insert(start);
-        source.replace(start, end - start, d->violation.fixes[0]);
+        // Choose fix based on style: snake_case=0, camelCase=1
+        size_t fix_idx = 0;
+        if (fix_style == "camel" && d->violation.fixes.size() > 1) fix_idx = 1;
+        source.replace(start, end - start, d->violation.fixes[fix_idx]);
         changed = true;
     }
 
@@ -311,6 +318,18 @@ static int run_lint(const CliArgs& args) {
     worker(); // Use main thread too
     for (auto& t : threads) t.join();
 
+    // Dedup: remove VL003 violations that overlap with VL004 (same span)
+    for (auto& diags : all_diags) {
+        std::unordered_set<uint32_t> vl004_spans;
+        for (const auto& d : diags)
+            if (d.violation.rule_id == "VL004") vl004_spans.insert(d.violation.span.start);
+        diags.erase(std::remove_if(diags.begin(), diags.end(),
+            [&](const Diagnostic& d) {
+                return d.violation.rule_id == "VL003" &&
+                       vl004_spans.count(d.violation.span.start);
+            }), diags.end());
+    }
+
     // Emit results
     bool has_errors   = false;
     bool has_warnings = false;
@@ -330,7 +349,7 @@ static int run_lint(const CliArgs& args) {
 
         // Apply fixes if requested
         if (args.fix) {
-            bool fixed = apply_fix(files[i], std::span<const Diagnostic>(all_diags[i]));
+            bool fixed = apply_fix(files[i], std::span<const Diagnostic>(all_diags[i]), args.fix_style);
             if (fixed && args.verbose)
                 std::cerr << "[vietlint] fixed: " << files[i] << '\n';
         }
