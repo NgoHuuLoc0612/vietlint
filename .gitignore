@@ -10,7 +10,6 @@ __pycache__/
 *.pyd
 
 # ML/Data
-corpus/corpus_raw.jsonl
 model.onnx
 *.onnx
 
