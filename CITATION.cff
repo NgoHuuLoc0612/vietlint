@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+title: vietlint
+message: >-
+  If you use vietlint in research or tooling projects,
+  please cite it.
+type: software
+authors:
+  - family-names: Ngo
+    given-names: Huu Loc
+    email: davidzucker254@gmail.com
+    affiliation: Independent Developer
+    orcid: 'https://orcid.org/0009-0005-3868-3569'
+repository-code: 'https://github.com/NgoHuuLoc0612/vietlint'
+abstract: >-
+  vietlint is an experimental static analysis and linting
+  tool for Vietnamese programming conventions, focused on
+  identifier quality, naming consistency, and multilingual
+  code style analysis.
+keywords:
+  - vietnam
+  - vietnamese
+  - linter
+  - static-analysis
+  - tooling
+  - code-quality
+  - naming-convention
+  - developer-tools
+license: MIT
+commit: e1b5e0d
+version: 1.0.3
+date-released: '2026-05-25'
+
