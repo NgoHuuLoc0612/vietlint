@@ -37,3 +37,15 @@ severity = "info"
 [rules.VL007]
 enabled = false
 severity = "info"
+[rules.VL008]
+enabled = true
+severity = "warning"
+[rules.VL009]
+enabled = true
+severity = "warning"
+[rules.VL010]
+enabled = true
+severity = "info"
+[rules.VL011]
+enabled = true
+severity = "warning"

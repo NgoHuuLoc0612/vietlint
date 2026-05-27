@@ -171,6 +171,10 @@ private:
     static RuleResult rule_vl005_unicode_normalization(const RuleContext& ctx);
     static RuleResult rule_vl006_consistent_naming(const RuleContext& ctx);
     static RuleResult rule_vl007_viet_in_string_literal(const RuleContext& ctx);
+    static RuleResult rule_vl008_inconsistent_transliteration(const RuleContext& ctx);
+    static RuleResult rule_vl009_vietnamese_in_exception(const RuleContext& ctx);
+    static RuleResult rule_vl010_missing_english_docstring(const RuleContext& ctx);
+    static RuleResult rule_vl011_vietnamese_import_alias(const RuleContext& ctx);
 
     [[nodiscard]] bool is_rule_enabled(std::string_view rule_id) const noexcept;
     [[nodiscard]] Severity effective_severity(std::string_view rule_id,

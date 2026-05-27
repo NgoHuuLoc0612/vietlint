@@ -3,12 +3,14 @@
 #include "vietlint/rule_engine.hpp"
 #include "vietlint/ml_classifier.hpp"
 #include <filesystem>
+#include <iostream>
 #include <unordered_set>
 #include <algorithm>
 #include <fstream>
 #include <sstream>
 #include <regex>
 #include <filesystem>
+#include <iostream>
 #include <unordered_set>
 #include <charconv>
 
@@ -489,6 +491,182 @@ RuleResult RuleEngine::rule_vl007_viet_in_string_literal(const RuleContext& ctx)
 }
 
 // ---------------------------------------------------------------------------
+// VL008: Inconsistent transliteration style in same file
+// ---------------------------------------------------------------------------
+RuleResult RuleEngine::rule_vl008_inconsistent_transliteration(const RuleContext& ctx) {
+    // Detect mixed snake_case and camelCase transliterated identifiers in same file
+    VietnameseClassifier clf;
+    std::vector<std::string> snake_ids, camel_ids;
+    for (const auto& tok : ctx.tokens) {
+        if (!tok.is_identifier()) continue;
+        auto analysis = clf.classify(tok);
+        if (analysis.cls != IdentifierClass::TransliteratedViet) continue;
+        std::string raw = tok.raw;
+        if (raw.find('_') != std::string::npos)
+            snake_ids.push_back(raw);
+        else if (std::any_of(raw.begin()+1, raw.end(), [](char c){ return std::isupper((unsigned char)c); }))
+            camel_ids.push_back(raw);
+    }
+    RuleResult violations;
+    if (!snake_ids.empty() && !camel_ids.empty()) {
+        // Flag the minority style
+        auto& minority = snake_ids.size() < camel_ids.size() ? snake_ids : camel_ids;
+        std::string dominant = snake_ids.size() >= camel_ids.size() ? "snake_case" : "camelCase";
+        for (const auto& tok : ctx.tokens) {
+            if (!tok.is_identifier()) continue;
+            if (std::find(minority.begin(), minority.end(), tok.raw) == minority.end()) continue;
+            ConventionViolation v;
+            v.rule_id    = "VL008";
+            v.severity   = Severity::Warning;
+            v.span       = tok.span;
+            v.identifier = tok.raw;
+            v.message    = "Identifier '" + tok.raw + "' uses inconsistent transliteration style. "
+                           "File predominantly uses " + dominant + ".";
+            violations.push_back(std::move(v));
+        }
+    }
+    return violations;
+}
+
+// ---------------------------------------------------------------------------
+// VL009: Vietnamese text in exception/error messages
+// ---------------------------------------------------------------------------
+RuleResult RuleEngine::rule_vl009_vietnamese_in_exception(const RuleContext& ctx) {
+    RuleResult violations;
+    UTF8Scanner scanner;
+    bool prev_was_raise = false;
+    for (const auto& tok : ctx.tokens) {
+        // Track raise/throw keywords
+        if (tok.raw == "raise" || tok.raw == "throw") {
+            prev_was_raise = true;
+            continue;
+        }
+        // Skip identifiers after raise (e.g. ValueError, Exception)
+        if (prev_was_raise && tok.is_identifier()) continue;
+        // Skip punctuation like ( after raise ValueError
+        if (prev_was_raise && tok.kind == TokenKind::Punctuation) continue;
+        if (prev_was_raise && (tok.kind == TokenKind::StringLiteral ||
+            tok.kind == TokenKind::VietnameseIdentifier)) {
+            auto bytes = std::span<const uint8_t>(
+                reinterpret_cast<const uint8_t*>(tok.raw.data()), tok.raw.size());
+            if (scanner.has_vietnamese_fast(bytes)) {
+                ConventionViolation v;
+                v.rule_id  = "VL009";
+                v.severity = Severity::Warning;
+                v.span     = tok.span;
+                v.message  = "Exception message contains Vietnamese text. "
+                             "Use English for better international compatibility.";
+                violations.push_back(std::move(v));
+            }
+        }
+        if (tok.kind != TokenKind::Whitespace) prev_was_raise = false;
+    }
+    return violations;
+}
+
+// ---------------------------------------------------------------------------
+// VL010: Missing English docstring for transliterated function
+// ---------------------------------------------------------------------------
+RuleResult RuleEngine::rule_vl010_missing_english_docstring(const RuleContext& ctx) {
+    RuleResult violations;
+    if (ctx.language != Language::Python) return violations;
+    VietnameseClassifier heuristic;
+    ml::MLClassifier ml_clf(ctx.lint_config && !ctx.lint_config->model_path.empty()
+        ? std::filesystem::path(ctx.lint_config->model_path) : std::filesystem::path{});
+    bool prev_was_def = false;
+    std::string func_name;
+    uint32_t func_line = 0;
+    SourceSpan func_span{};
+    for (const auto& tok : ctx.tokens) {
+        if (tok.kind == TokenKind::Keyword && tok.raw == "def") {
+            prev_was_def = true;
+            continue;
+        }
+        if (prev_was_def && tok.is_identifier()) {
+            bool is_transliterated = false;
+            if (ml_clf.using_onnx()) {
+                auto out = ml_clf.classify(tok.raw);
+                is_transliterated = (static_cast<int>(out.predicted_class) == 3) && out.confidence >= 0.7f;
+            } else {
+                auto analysis = heuristic.classify(tok);
+                is_transliterated = (analysis.cls == IdentifierClass::TransliteratedViet);
+            }
+            if (is_transliterated) {
+                func_name = tok.raw;
+                func_line = tok.span.line;
+                func_span = tok.span;
+            }
+            prev_was_def = false;
+            continue;
+        }
+        if (!func_name.empty() && tok.kind == TokenKind::StringLiteral) {
+            UTF8Scanner scanner;
+            auto bytes = std::span<const uint8_t>(
+                reinterpret_cast<const uint8_t*>(tok.raw.data()), tok.raw.size());
+            bool has_viet = scanner.has_vietnamese_fast(bytes);
+            if (!has_viet) { func_name.clear(); continue; }
+        }
+        if (!func_name.empty() && tok.span.line > func_line + 5) {
+            ConventionViolation v;
+            v.rule_id    = "VL010";
+            v.severity   = Severity::Info;
+            v.span       = func_span;
+            v.identifier = func_name;
+            v.message    = "Transliterated function '" + func_name + "' lacks an English docstring. "
+                           "Add a docstring explaining what this function does.";
+            violations.push_back(std::move(v));
+            func_name.clear();
+        }
+    }
+    return violations;
+}
+// ---------------------------------------------------------------------------
+// VL011: Vietnamese import alias
+// ---------------------------------------------------------------------------
+RuleResult RuleEngine::rule_vl011_vietnamese_import_alias(const RuleContext& ctx) {
+    RuleResult violations;
+    if (ctx.language != Language::Python &&
+        ctx.language != Language::JavaScript) return violations;
+    VietnameseClassifier heuristic;
+    ml::MLClassifier ml_clf(ctx.lint_config && !ctx.lint_config->model_path.empty()
+        ? std::filesystem::path(ctx.lint_config->model_path) : std::filesystem::path{});
+    bool prev_was_as = false;
+    for (const auto& tok : ctx.tokens) {
+        if (tok.raw == "as") {
+            prev_was_as = true;
+            continue;
+        }
+        if (prev_was_as && tok.is_identifier()) {
+            bool is_viet = false;
+            if (ml_clf.using_onnx()) {
+                auto out = ml_clf.classify(tok.raw);
+                int cls = static_cast<int>(out.predicted_class);
+                is_viet = (cls == 1 || cls == 2 || cls == 3) && out.confidence >= 0.7f;
+            } else {
+                auto analysis = heuristic.classify(tok);
+                is_viet = (analysis.cls == IdentifierClass::TransliteratedViet ||
+                           analysis.cls == IdentifierClass::PureVietnamese ||
+                           analysis.cls == IdentifierClass::MixedVietnamese);
+            }
+            if (is_viet) {
+                ConventionViolation v;
+                v.rule_id    = "VL011";
+                v.severity   = Severity::Warning;
+                v.span       = tok.span;
+                v.identifier = tok.raw;
+                v.message    = "Import alias '" + tok.raw + "' appears to be Vietnamese. "
+                               "Use conventional English aliases (e.g., 'import numpy as np').";
+                violations.push_back(std::move(v));
+            }
+            prev_was_as = false;
+            continue;
+        }
+        if (tok.kind != TokenKind::Whitespace) prev_was_as = false;
+    }
+    return violations;
+}
+
+// ---------------------------------------------------------------------------
 void RuleEngine::register_builtin_rules() noexcept {
     registry_.register_rule({
         "VL001", "Vietnamese Identifier",
@@ -531,6 +709,30 @@ void RuleEngine::register_builtin_rules() noexcept {
         "Detects Vietnamese text in string literals (i18n concern)",
         "style", Severity::Info,
         rule_vl007_viet_in_string_literal
+    });
+    registry_.register_rule({
+        "VL008", "Inconsistent Transliteration Style",
+        "Detects mixed snake_case and camelCase transliteration in same file",
+        "naming", Severity::Warning,
+        rule_vl008_inconsistent_transliteration
+    });
+    registry_.register_rule({
+        "VL009", "Vietnamese in Exception Message",
+        "Detects Vietnamese text in exception/error messages",
+        "i18n", Severity::Warning,
+        rule_vl009_vietnamese_in_exception
+    });
+    registry_.register_rule({
+        "VL010", "Missing English Docstring",
+        "Transliterated function missing English docstring",
+        "documentation", Severity::Info,
+        rule_vl010_missing_english_docstring
+    });
+    registry_.register_rule({
+        "VL011", "Vietnamese Import Alias",
+        "Detects Vietnamese words used as import aliases",
+        "naming", Severity::Warning,
+        rule_vl011_vietnamese_import_alias
     });
 }
 
