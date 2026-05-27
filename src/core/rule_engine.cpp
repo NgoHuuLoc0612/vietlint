@@ -338,7 +338,7 @@ RuleResult RuleEngine::rule_vl004_transliteration(const RuleContext& ctx) {
     ml::MLClassifier ml_clf(ctx.lint_config && !ctx.lint_config->model_path.empty() ? std::filesystem::path(ctx.lint_config->model_path) : std::filesystem::path{});
     // Whitelist common English words that model may misclassify
     static const std::unordered_set<std::string> ENGLISH_WHITELIST = {
-        "token","database","manager","handler","service","controller",
+        "token","database","manager","valueerror","keyerror","typeerror","attributeerror","indexerror","runtimeerror","exception","__init__","__str__","__repr__","__len__","__get__","__set__","handler","service","controller",
         "repository","factory","builder","provider","listener","observer",
         "formatter","validator","serializer","parser","scanner","lexer",
         "compiler","emitter","renderer","dispatcher","router","middleware",
