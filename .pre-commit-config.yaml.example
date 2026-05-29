@@ -1,0 +1,30 @@
+# .pre-commit-config.yaml
+# Add this file to your project root and run:
+#   pip install pre-commit
+#   pre-commit install
+#
+# VietLint must be installed and available on PATH.
+# Install: download binary from https://github.com/NgoHuuLoc0612/vietlint/releases
+# or build from source: cmake -B build && cmake --build build && sudo cmake --install build
+
+repos:
+  - repo: https://github.com/NgoHuuLoc0612/vietlint
+    rev: v1.0.5
+    hooks:
+      # ── Basic lint (recommended for most projects) ────────────────────────
+      - id: vietlint
+        # Optional: only lint specific file types
+        # types_or: [python, javascript]
+        #
+        # Optional: pass extra args
+        # args: [--model=/path/to/model.onnx, --format=gcc]
+
+      # ── Auto-fix Vietnamese identifiers (choose ONE of the two below) ─────
+      # snake_case fix: tênKhách → ten_khach
+      # - id: vietlint-fix
+      #
+      # camelCase fix: tênKhách → tenKhach
+      # - id: vietlint-fix-camel
+
+      # ── Strict mode (fail on any warning) ─────────────────────────────────
+      # - id: vietlint-strict

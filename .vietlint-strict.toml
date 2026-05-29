@@ -1,0 +1,53 @@
+# .vietlint-strict.toml
+# Strict configuration for use with the vietlint-strict pre-commit hook.
+# All rules enabled at warning or error severity.
+# Copy this file to your project root if using the vietlint-strict hook.
+
+[lint]
+fail_on_warning = true
+max_violations  = 0
+target_encoding = "utf-8"
+
+[rules.VL001]
+enabled  = true
+severity = "warning"
+
+[rules.VL002]
+enabled  = true
+severity = "warning"
+
+[rules.VL003]
+enabled  = true
+severity = "warning"
+
+[rules.VL004]
+enabled  = true
+severity = "warning"
+
+[rules.VL005]
+enabled  = true
+severity = "error"
+
+[rules.VL006]
+enabled  = true
+severity = "warning"
+
+[rules.VL007]
+enabled  = true
+severity = "warning"
+
+[rules.VL008]
+enabled  = true
+severity = "warning"
+
+[rules.VL009]
+enabled  = true
+severity = "warning"
+
+[rules.VL010]
+enabled  = true
+severity = "warning"
+
+[rules.VL011]
+enabled  = true
+severity = "warning"

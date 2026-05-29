@@ -1,0 +1,52 @@
+- id: vietlint
+  name: VietLint — Vietnamese coding convention linter
+  description: >
+    Detects Vietnamese coding convention violations including Vietnamese
+    identifiers (VL001), mixed-language naming (VL002), transliterated
+    Vietnamese words (VL004), inconsistent transliteration style (VL008),
+    Vietnamese exception messages (VL009), missing English docstrings (VL010),
+    and Vietnamese import aliases (VL011).
+  language: system
+  entry: vietlint lint
+  args: [--format=gcc]
+  types_or: [python, javascript, ts, c, c++, java, go, rust, php]
+  pass_filenames: true
+  fail_fast: false
+
+- id: vietlint-fix
+  name: VietLint — auto-fix Vietnamese identifiers (snake_case)
+  description: >
+    Automatically fixes VL001 violations by converting Vietnamese identifiers
+    with diacritical marks to their ASCII snake_case equivalents.
+    Uses --fix-style=snake by default.
+  language: system
+  entry: vietlint lint --fix --fix-style=snake
+  args: []
+  types_or: [python, javascript, ts, c, c++]
+  pass_filenames: true
+  fail_fast: false
+
+- id: vietlint-fix-camel
+  name: VietLint — auto-fix Vietnamese identifiers (camelCase)
+  description: >
+    Automatically fixes VL001 violations by converting Vietnamese identifiers
+    with diacritical marks to their ASCII camelCase equivalents.
+    Use this hook instead of vietlint-fix for projects that prefer camelCase.
+  language: system
+  entry: vietlint lint --fix --fix-style=camel
+  args: []
+  types_or: [python, javascript, ts, c, c++]
+  pass_filenames: true
+  fail_fast: false
+
+- id: vietlint-strict
+  name: VietLint — strict mode (fail on warnings)
+  description: >
+    Strict mode: fails the commit if any VietLint warning is found,
+    not just errors. Recommended for new projects starting with clean state.
+  language: system
+  entry: vietlint lint
+  args: [--format=gcc, --config=.vietlint-strict.toml]
+  types_or: [python, javascript, ts, c, c++, java, go, rust, php]
+  pass_filenames: true
+  fail_fast: true
